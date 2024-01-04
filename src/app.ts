@@ -1,0 +1,31 @@
+import express from "express";
+import { engine } from "express-handlebars";
+import { Application, Request, Response } from "express-serve-static-core";
+import mongoose from "mongoose";
+const cors = require("cors");
+const app: Application = express();
+const port = 3000;
+const posts = require("./routes/post");
+const category = require("./routes/category");
+const apiIndex = require("./api/index");
+const uri = `mongodb+srv://franzdiaz460:blog-site460@cluster0.jcvqazt.mongodb.net/blog-data?retryWrites=true&w=majority`;
+
+mongoose.set("strictQuery", false);
+async function startMongooseServer(uri: string): Promise<void> {
+  await mongoose.connect(uri);
+}
+startMongooseServer(uri).catch((err) => console.log(err));
+
+app.engine("handlebars", engine());
+app.set("view engine", "handlebars");
+app.set("views", "./src/views");
+app.use(express.urlencoded());
+app.use(express.json());
+
+app.listen(port, () => {
+  console.log("Listening at port: " + port);
+});
+
+app.use("/api", apiIndex);
+app.use("/", category);
+app.use("/:category", posts);
