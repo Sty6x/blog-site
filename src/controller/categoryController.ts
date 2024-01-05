@@ -2,6 +2,8 @@ import expressAsyncHandler from "express-async-handler";
 import { Response, Request, NextFunction } from "express";
 import { Category } from "../model/categoryModel";
 import { Post } from "../model/postModel";
+import { t_category } from "../types/t_category";
+import mongoose, { Schema } from "mongoose";
 
 // middlewares to query the data provided by the parameter
 // after querying the requested data got to the next middleware next()
@@ -60,8 +62,36 @@ const putAPICategory = expressAsyncHandler(
 );
 
 const deleteAPICategory = expressAsyncHandler(
-  async (req: Request, res: Response) => {
-    console.log(req.params);
+  async (req: Request, res: Response): Promise<any> => {
+    const [queryUncategorized, queryCurrentCategory] = await Promise.all([
+      Category.findOne({
+        name: "uncategorized",
+      }).exec(),
+      Category.findOne({
+        name: req.params.category,
+      }).exec(),
+    ]);
+
+    if (req.params.category === "uncategorized")
+      return res.json({ message: "Current category is protected" });
+
+    await Category.findByIdAndUpdate(queryUncategorized?._id, {
+      $push: {
+        posts: [...(queryCurrentCategory?.posts as mongoose.Types.ObjectId[])],
+      },
+    }).exec();
+    await Post.updateMany(
+      {
+        category: { categoryId: queryCurrentCategory?._id },
+      },
+      {
+        category: {
+          name: "uncategorized",
+          categoryId: queryUncategorized?._id,
+        },
+      }
+    ).exec();
+
     res.json({ message: "DELETE request on Category" });
   }
 );
