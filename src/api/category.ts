@@ -11,6 +11,6 @@ const router = express.Router();
 router.get("/:category", getAPICategory);
 router.post("/category/create", postAPICategory);
 router.delete("/:category", deleteAPICategory);
-router.put("/:category", putAPICategory);
+router.put("/:category/update", putAPICategory);
 
 module.exports = router;

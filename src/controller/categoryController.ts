@@ -46,17 +46,23 @@ const postAPICategory = expressAsyncHandler(
   }
 );
 
+const putAPICategory = expressAsyncHandler(
+  async (req: Request, res: Response) => {
+    const categoryName = req.params.category;
+    const categoryData = req.body;
+    const updateCategory = await Category.findOneAndUpdate(
+      { name: categoryName },
+      categoryData
+    ).exec();
+    console.log(updateCategory);
+    res.json({ message: "PUT request on Category" });
+  }
+);
+
 const deleteAPICategory = expressAsyncHandler(
   async (req: Request, res: Response) => {
     console.log(req.params);
     res.json({ message: "DELETE request on Category" });
-  }
-);
-
-const putAPICategory = expressAsyncHandler(
-  async (req: Request, res: Response) => {
-    console.log(req.params);
-    res.json({ message: "PUT request on Category" });
   }
 );
 
