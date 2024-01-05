@@ -89,7 +89,7 @@ const putAPIPost = expressAsyncHandler(
       ]);
       userData.category = {
         name: newCategory?.name,
-        _id: newCategory?._id,
+        categoryId: newCategory?._id,
       };
     }
     const updatePost = await Post.updateOne(
