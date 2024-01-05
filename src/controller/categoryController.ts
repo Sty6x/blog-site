@@ -3,10 +3,25 @@ import { Response, Request, NextFunction } from "express";
 import { Category } from "../model/categoryModel";
 import { Post } from "../model/postModel";
 import { t_category } from "../types/t_category";
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Query, Schema } from "mongoose";
+
+function updatePostsToUncategorized(
+  currentCategory: any,
+  uncategorizedCategory: any
+): any[] {
+  return currentCategory.posts.map((postId: mongoose.Types.ObjectId) => {
+    return Post.findByIdAndUpdate(postId, {
+      category: {
+        categoryId: uncategorizedCategory?._id,
+        name: "uncategorized",
+      },
+    });
+  });
+}
 
 // middlewares to query the data provided by the parameter
 // after querying the requested data got to the next middleware next()
+
 const getCategory = expressAsyncHandler(async (req: Request, res: Response) => {
   console.log(req.params);
   res.send("Not implemented");
@@ -63,11 +78,17 @@ const putAPICategory = expressAsyncHandler(
 
 const deleteAPICategory = expressAsyncHandler(
   async (req: Request, res: Response): Promise<any> => {
+    // Category.findOneAndUpdate(
+    //   { name: "uncategorized" },
+    //   {
+    //     $set: { posts: [] },
+    //   }
+    // ).exec();
     const [queryUncategorized, queryCurrentCategory] = await Promise.all([
       Category.findOne({
         name: "uncategorized",
       }).exec(),
-      Category.findOne({
+      Category.findOneAndDelete({
         name: req.params.category,
       }).exec(),
     ]);
@@ -80,14 +101,13 @@ const deleteAPICategory = expressAsyncHandler(
         posts: [...(queryCurrentCategory?.posts as mongoose.Types.ObjectId[])],
       },
     }).exec();
+
     await Post.updateMany(
+      { "category.categoryId": queryCurrentCategory?._id },
       {
-        category: { categoryId: queryCurrentCategory?._id },
-      },
-      {
-        category: {
-          name: "uncategorized",
-          categoryId: queryUncategorized?._id,
+        $set: {
+          "category.name": "uncategorized",
+          "category.categoryId": queryUncategorized?._id,
         },
       }
     ).exec();
