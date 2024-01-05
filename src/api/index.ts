@@ -22,7 +22,7 @@ router.use("/", categoryApi);
 
 router.get("/:category/:postId", getAPIPost);
 router.post("/:category/create", postAPIPost);
-router.delete("/:category/:postId/delete", deleteAPIPost);
+router.delete("/:category/:postId", deleteAPIPost);
 router.put("/:category/:postId/update", putAPIPost);
 
 module.exports = router;

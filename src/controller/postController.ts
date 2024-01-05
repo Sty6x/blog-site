@@ -28,12 +28,14 @@ const getAPIPost = expressAsyncHandler(async (req: Request, res: Response) => {
 });
 
 const postAPIPost = expressAsyncHandler(async (req: Request, res: Response) => {
-  const query = await Category.findOne({ name: req.params.category }).exec();
+  const queryCategory = await Category.findOne({
+    name: req.params.category,
+  }).exec();
   const userData = {
     ...req.body,
     category: {
-      name: query?.name,
-      categoryId: query?.id,
+      name: queryCategory?.name,
+      categoryId: queryCategory?.id,
     },
   };
   const newPost = new Post(userData);
@@ -99,10 +101,23 @@ const putAPIPost = expressAsyncHandler(
   }
 );
 
+// refer the current blogpost's id
+
 const deleteAPIPost = expressAsyncHandler(
-  async (req: Request, res: Response) => {
-    console.log(req.params);
-    res.json({ message: "DELETE request on post" });
+  async (req: Request, res: Response): Promise<any> => {
+    const queryPost = await Post.findOne({
+      title: req.params.postId,
+    }).exec();
+    if (!queryPost) return res.json({ message: "Does not exist" });
+    const queryCategory = await Category.findByIdAndUpdate(
+      queryPost?.category.categoryId,
+      { $pull: { posts: queryPost?._id } }
+    ).exec();
+    queryPost?.deleteOne().exec();
+    res.json({
+      message: "DELETE request on post",
+      data: { _id: queryPost?._id, category: queryPost?.category },
+    });
   }
 );
 
