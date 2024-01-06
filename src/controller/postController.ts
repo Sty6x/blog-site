@@ -2,10 +2,6 @@ import expressAsyncHandler from "express-async-handler";
 import { Response, Request, NextFunction } from "express";
 import { Post } from "../model/postModel";
 import { Category } from "../model/categoryModel";
-import { checkExistingData } from "../utils/checkExistingDoc";
-import { t_post } from "../types/t_post";
-import { t_category } from "../types/t_category";
-import { t_jsonPayload } from "../types/t_jsonPayload";
 // middlewares to query the data provided by the parameter
 // after querying the requested data got to the next middleware next()
 const getPost = expressAsyncHandler(async (req: Request, res: Response) => {
@@ -15,30 +11,25 @@ const getPost = expressAsyncHandler(async (req: Request, res: Response) => {
 
 // API Controllers
 const getAPIPost = [
-  expressAsyncHandler(async (req: Request, res: Response<t_jsonPayload>) => {
+  expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
     const query = await Post.findOne({ title: req.params.postId }).exec();
-    await checkExistingData(
-      query,
-      (query) => {
-        res.json({
-          message: "READ request on post",
-          statusCode: 200,
-          data: {
-            title: query?.title,
-            content: query?.content,
-            author: query?.author,
-            category: query?.category,
-          },
-        });
+    if (!query) {
+      res.json({
+        message: "Post not found",
+        statusCode: 404,
+      });
+      return;
+    }
+    res.json({
+      message: "Successfully retrieved post",
+      statusCode: 200,
+      data: {
+        title: query?.title,
+        content: query?.content,
+        author: query?.author,
+        category: query?.category,
       },
-      () => {
-        console.log(`Error 404`);
-        res.json({
-          message: "Unable to Retrieve data",
-          statusCode: 404,
-        });
-      }
-    );
+    });
   }),
 ];
 
@@ -54,6 +45,13 @@ const postAPIPost = [
         categoryId: queryCategory?.id,
       },
     };
+    if (!queryCategory) {
+      res.json({
+        message: "Unable to POST a new blog post",
+        statusCode: 404,
+      });
+      return;
+    }
     const newPost = new Post(userData);
     await newPost.save();
     await Category.updateOne(
@@ -61,8 +59,14 @@ const postAPIPost = [
       { $push: { posts: [newPost._id] } }
     ).exec();
     res.json({
-      message: "POST request on post",
-      data: { _id: newPost._id, ...userData },
+      message: "Successfully created a new post",
+      statusCode: 200,
+      data: {
+        title: newPost?.title,
+        content: newPost?.content,
+        author: newPost?.author,
+        category: newPost?.category,
+      },
     });
   }),
 ];
