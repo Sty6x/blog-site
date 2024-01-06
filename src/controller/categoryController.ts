@@ -23,8 +23,18 @@ function updatePostsToUncategorized(
 // after querying the requested data got to the next middleware next()
 
 const getCategory = expressAsyncHandler(async (req: Request, res: Response) => {
-  console.log(req.params);
-  res.send("Not implemented");
+  const queryCategory = await Category.findOne({
+    name: req.params.category,
+  }).exec();
+  if (!queryCategory) res.json({ message: "Category does not exist" });
+  res.json({
+    message: `Retrieved ${req.params.category} category`,
+    data: {
+      name: queryCategory?.name,
+      _id: queryCategory?._id,
+      posts: queryCategory?.posts,
+    },
+  });
 });
 
 // API Controllers
@@ -78,12 +88,9 @@ const putAPICategory = expressAsyncHandler(
 
 const deleteAPICategory = expressAsyncHandler(
   async (req: Request, res: Response): Promise<any> => {
-    // Category.findOneAndUpdate(
-    //   { name: "uncategorized" },
-    //   {
-    //     $set: { posts: [] },
-    //   }
-    // ).exec();
+    if (req.params.category === "uncategorized")
+      return res.json({ message: "Current category is protected" });
+
     const [queryUncategorized, queryCurrentCategory] = await Promise.all([
       Category.findOne({
         name: "uncategorized",
@@ -92,9 +99,6 @@ const deleteAPICategory = expressAsyncHandler(
         name: req.params.category,
       }).exec(),
     ]);
-
-    if (req.params.category === "uncategorized")
-      return res.json({ message: "Current category is protected" });
 
     await Category.findByIdAndUpdate(queryUncategorized?._id, {
       $push: {
