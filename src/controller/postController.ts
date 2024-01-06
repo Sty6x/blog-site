@@ -47,7 +47,7 @@ const postAPIPost = [
     };
     if (!queryCategory) {
       res.json({
-        message: "Unable to POST a new blog post",
+        message: "Unable to POST a new blog post to a non-existing category",
         statusCode: 404,
       });
       return;
@@ -77,6 +77,15 @@ const putAPIPost = [
       ...req.body,
     };
     const queryPost = await Post.findOne({ title: req.params.postId }).exec();
+    if (!queryPost) {
+      res.json({
+        message: "Unable to Update a non-existing blog post",
+        statusCode: 404,
+      });
+      return;
+    }
+
+    // checks whether if the category needs to be updated or not.
     if (userData.category !== null) {
       const checkExistingCategory = await Category.findOne({
         name: userData.category,
@@ -105,7 +114,16 @@ const putAPIPost = [
       { ...userData }
     ).exec();
 
-    res.json({ message: "PUT request on post" });
+    res.json({
+      message: `Successfully updated ${req.params.postId}`,
+      statusCode: 200,
+      data: {
+        title: userData?.title,
+        content: userData?.content,
+        author: userData?.author,
+        category: userData?.category,
+      },
+    });
   }),
 ];
 
