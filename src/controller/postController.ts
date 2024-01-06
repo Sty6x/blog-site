@@ -127,8 +127,6 @@ const putAPIPost = [
   }),
 ];
 
-// refer the current blogpost's id
-
 const deleteAPIPost = [
   expressAsyncHandler(async (req: Request, res: Response): Promise<any> => {
     const queryPost = await Post.findOne({
@@ -144,7 +142,8 @@ const deleteAPIPost = [
 
     if (!queryCurrentCategory)
       return res.json({
-        message: `The category ${req.params.postId} does not exist`,
+        message: `The post ${req.params.postId} does not exist`,
+        statusCode: 404,
       });
     await queryCurrentCategory
       .updateOne({
@@ -153,7 +152,8 @@ const deleteAPIPost = [
       .exec();
     await queryPost?.deleteOne().exec();
     res.json({
-      message: "DELETE request on post",
+      message: `Successfully deleted ${req.params.postId}`,
+      statusCode: 200,
       data: { _id: queryPost?._id, category: queryPost?.category },
     });
   }),

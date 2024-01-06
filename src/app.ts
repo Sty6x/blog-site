@@ -26,6 +26,9 @@ app.listen(port, () => {
   console.log("Listening at port: " + port);
 });
 
+// API Endpoints
 app.use("/api", apiIndex);
+
+// Page Route Resources
 app.use("/", category);
 app.use("/:category", posts);
