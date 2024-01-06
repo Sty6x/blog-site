@@ -134,12 +134,24 @@ const deleteAPIPost = [
     const queryPost = await Post.findOne({
       title: req.params.postId,
     }).exec();
-    if (!queryPost) return res.json({ message: "Does not exist" });
-    const queryCategory = await Category.findByIdAndUpdate(
-      queryPost?.category.categoryId,
-      { $pull: { posts: queryPost?._id } }
-    ).exec();
-    queryPost?.deleteOne().exec();
+    const queryCurrentCategory = await Category.findOne({
+      posts: { $in: [queryPost?._id] },
+    });
+
+    // instead of checking query post if it exist alone
+    // check if it exists on the current category, if it exists
+    // on the current category then that means it really does exist
+
+    if (!queryCurrentCategory)
+      return res.json({
+        message: `The category ${req.params.postId} does not exist`,
+      });
+    await queryCurrentCategory
+      .updateOne({
+        $pull: { posts: queryPost?._id },
+      })
+      .exec();
+    await queryPost?.deleteOne().exec();
     res.json({
       message: "DELETE request on post",
       data: { _id: queryPost?._id, category: queryPost?.category },
