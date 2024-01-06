@@ -4,20 +4,6 @@ import { Category } from "../model/categoryModel";
 import { Post } from "../model/postModel";
 import mongoose, { Query, Schema } from "mongoose";
 
-function updatePostsToUncategorized(
-  currentCategory: any,
-  uncategorizedCategory: any
-): any[] {
-  return currentCategory.posts.map((postId: mongoose.Types.ObjectId) => {
-    return Post.findByIdAndUpdate(postId, {
-      category: {
-        categoryId: uncategorizedCategory?._id,
-        name: "uncategorized",
-      },
-    });
-  });
-}
-
 // middlewares to query the data provided by the parameter
 // after querying the requested data got to the next middleware next()
 
@@ -89,13 +75,17 @@ const postAPICategory = [
 ];
 
 const putAPICategory = [
-  expressAsyncHandler(async (req: Request, res: Response) => {
+  expressAsyncHandler(async (req: Request, res: Response): Promise<any> => {
     const categoryName = req.params.category;
     const categoryData = req.body;
-    const updateCategory = await Category.findOneAndUpdate(
-      { name: categoryName },
-      categoryData
-    ).exec();
+    const queryCategory = await Category.findOne({ name: categoryName }).exec();
+    if (!queryCategory)
+      return res.json({
+        message: `Unable to update a category that does not exist`,
+        statusCode: 404,
+      });
+
+    await queryCategory.updateOne(categoryData).exec();
     res.json({
       message: `Successfully Updated ${req.params.category}`,
       statusCode: res.statusCode,
