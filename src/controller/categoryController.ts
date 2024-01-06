@@ -2,7 +2,6 @@ import expressAsyncHandler from "express-async-handler";
 import { Response, Request, NextFunction } from "express";
 import { Category } from "../model/categoryModel";
 import { Post } from "../model/postModel";
-import { t_category } from "../types/t_category";
 import mongoose, { Query, Schema } from "mongoose";
 
 function updatePostsToUncategorized(
@@ -22,83 +21,107 @@ function updatePostsToUncategorized(
 // middlewares to query the data provided by the parameter
 // after querying the requested data got to the next middleware next()
 
-const getCategory = expressAsyncHandler(async (req: Request, res: Response) => {
-  const queryCategory = await Category.findOne({
-    name: req.params.category,
-  }).exec();
-  if (!queryCategory) res.json({ message: "Category does not exist" });
-  res.json({
-    message: `Retrieved ${req.params.category} category`,
-    data: {
-      name: queryCategory?.name,
-      _id: queryCategory?._id,
-      posts: queryCategory?.posts,
-    },
-  });
-});
-
-// API Controllers
-const getAPICategory = expressAsyncHandler(
-  async (req: Request, res: Response) => {
-    const userQuery = req.params.category;
-    const query = await Category.findOne({ name: userQuery })
-      .populate("posts")
-      .exec();
-    console.log(query);
-    const nullQuery =
-      query === null && "The Category that you're looking for does not exist";
+const getCategory = expressAsyncHandler(
+  async (req: Request, res: Response): Promise<any> => {
+    const queryCategory = await Category.findOne({
+      name: req.params.category,
+    }).exec();
+    if (!queryCategory)
+      return res.json({ message: "Category does not exist", statusCode: 404 });
     res.json({
-      message: "READ request on Category",
-      data: nullQuery || { name: query?.name, posts: query?.posts },
+      message: `Retrieved ${req.params.category} category`,
+      statusCode: 200,
+      data: {
+        name: queryCategory?.name,
+        _id: queryCategory?._id,
+        posts: queryCategory?.posts,
+      },
     });
   }
 );
 
-const postAPICategory = expressAsyncHandler(
-  async (req: Request, res: Response) => {
+// API Controllers
+const getAPICategory = [
+  expressAsyncHandler(async (req: Request, res: Response): Promise<any> => {
+    const userQuery = req.params.category;
+    const query = await Category.findOne({ name: userQuery })
+      .populate("posts")
+      .exec();
+    if (!query)
+      return res.json({
+        message: "Unable to retrieve your requested category",
+        statusCode: 404,
+      });
+    res.json({
+      message: `Successfully Retrieved ${req.params.category}`,
+      statusCode: res.statusCode,
+      data: { name: query?.name, posts: query?.posts },
+    });
+  }),
+];
+
+const postAPICategory = [
+  expressAsyncHandler(async (req: Request, res: Response): Promise<any> => {
     const userData = req.body;
     const parseUserPosts = JSON.parse(userData.posts);
+    const checkExistingCategory = await Category.exists({
+      name: userData.name,
+    }).exec();
+    if (checkExistingCategory)
+      return res.json({
+        message: `The ${userData.name} category already exists`,
+        statusCode: 409,
+      });
     const newCategory = new Category({
       name: userData.name,
       posts: parseUserPosts,
     });
     await newCategory.save();
     res.json({
-      message: "POST request on Category",
+      message: `Successfully Created ${userData.name}`,
+      statusCode: res.statusCode,
       data: {
         name: userData.name,
         posts: parseUserPosts,
       },
     });
-  }
-);
+  }),
+];
 
-const putAPICategory = expressAsyncHandler(
-  async (req: Request, res: Response) => {
+const putAPICategory = [
+  expressAsyncHandler(async (req: Request, res: Response) => {
     const categoryName = req.params.category;
     const categoryData = req.body;
     const updateCategory = await Category.findOneAndUpdate(
       { name: categoryName },
       categoryData
     ).exec();
-    console.log(updateCategory);
-    res.json({ message: "PUT request on Category" });
-  }
-);
+    res.json({
+      message: `Successfully Updated ${req.params.category}`,
+      statusCode: res.statusCode,
+    });
+  }),
+];
 
-const deleteAPICategory = expressAsyncHandler(
-  async (req: Request, res: Response): Promise<any> => {
+const deleteAPICategory = [
+  expressAsyncHandler(async (req: Request, res: Response): Promise<any> => {
     if (req.params.category === "uncategorized")
-      return res.json({ message: "Current category is protected" });
+      return res.json({
+        message: "Current category is protected",
+        statusCode: 405,
+      });
 
     const [queryUncategorized, queryCurrentCategory] = await Promise.all([
       Category.findOne({
         name: "uncategorized",
       }).exec(),
-      Category.findOneAndDelete({
+      Category.findOne({
         name: req.params.category,
       }).exec(),
     ]);
+
+    if (!queryCurrentCategory)
+      return res.json({ message: "Category does not exist", statusCode: 404 });
 
     await Category.findByIdAndUpdate(queryUncategorized?._id, {
       $push: {
@@ -116,9 +139,13 @@ const deleteAPICategory = expressAsyncHandler(
       }
     ).exec();
 
-    res.json({ message: "DELETE request on Category" });
-  }
-);
+    await queryCurrentCategory.deleteOne();
+    res.json({
+      message: `Successfully Deleted ${req.params.category}`,
+      statusCode: res.statusCode,
+    });
+  }),
+];
 
 export {
   getCategory,
