@@ -1,13 +1,14 @@
-import expressAsyncHandler from "express-async-handler";
+import asyncHandler from "../utils/asyncHandler";
 import { Response, Request, NextFunction } from "express";
 import { Category } from "../model/categoryModel";
 import { Post } from "../model/postModel";
 import mongoose, { Query, Schema } from "mongoose";
+import CustomError from "../utils/CustomError";
 
 // middlewares to query the data provided by the parameter
 // after querying the requested data got to the next middleware next()
 
-const getCategory = expressAsyncHandler(
+const getCategory = asyncHandler(
   async (req: Request, res: Response): Promise<any> => {
     const queryCategory = await Category.findOne({
       name: req.params.category,
@@ -28,16 +29,15 @@ const getCategory = expressAsyncHandler(
 
 // API Controllers
 const getAPICategory = [
-  expressAsyncHandler(async (req: Request, res: Response): Promise<any> => {
+  asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const userQuery = req.params.category;
     const query = await Category.findOne({ name: userQuery })
       .populate("posts")
       .exec();
-    if (!query)
-      return res.json({
-        message: "Unable to retrieve your requested category",
-        statusCode: 404,
-      });
+    if (!query) {
+      const err = new CustomError("Category Not found", { statusCode: 404 });
+      throw err;
+    }
     res.json({
       message: `Successfully Retrieved ${req.params.category}`,
       statusCode: res.statusCode,
@@ -47,12 +47,13 @@ const getAPICategory = [
 ];
 
 const postAPICategory = [
-  expressAsyncHandler(async (req: Request, res: Response): Promise<any> => {
+  asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const userData = req.body;
     const parseUserPosts = JSON.parse(userData.posts);
     const checkExistingCategory = await Category.exists({
       name: userData.name,
     }).exec();
+    //check inputs needed
     if (checkExistingCategory)
       return res.json({
         message: `The ${userData.name} category already exists`,
@@ -75,16 +76,17 @@ const postAPICategory = [
 ];
 
 const putAPICategory = [
-  expressAsyncHandler(async (req: Request, res: Response): Promise<any> => {
+  asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const categoryName = req.params.category;
     const categoryData = req.body;
     const queryCategory = await Category.findOne({ name: categoryName }).exec();
-    if (!queryCategory)
-      return res.json({
-        message: `Unable to update a category that does not exist`,
-        statusCode: 404,
-      });
-
+    if (!queryCategory) {
+      const err = new CustomError(
+        "Unable to update a category that does not exist.",
+        { statusCode: 404 }
+      );
+      throw err;
+    }
     await queryCategory.updateOne(categoryData).exec();
     res.json({
       message: `Successfully Updated ${req.params.category}`,
@@ -94,11 +96,11 @@ const putAPICategory = [
 ];
 
 const deleteAPICategory = [
-  expressAsyncHandler(async (req: Request, res: Response): Promise<any> => {
+  asyncHandler(async (req: Request, res: Response): Promise<any> => {
     if (req.params.category === "uncategorized")
       return res.json({
-        message: "Current category is protected",
-        statusCode: 405,
+        message: "You are not authorized to invoke this action.",
+        statusCode: 403,
       });
 
     const [queryUncategorized, queryCurrentCategory] = await Promise.all([
@@ -110,8 +112,12 @@ const deleteAPICategory = [
       }).exec(),
     ]);
 
-    if (!queryCurrentCategory)
-      return res.json({ message: "Category does not exist", statusCode: 404 });
+    if (!queryCurrentCategory) {
+      const err = new CustomError("Category does not exist.", {
+        statusCode: 404,
+      });
+      throw err;
+    }
 
     await Category.findByIdAndUpdate(queryUncategorized?._id, {
       $push: {
