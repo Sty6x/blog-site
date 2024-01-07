@@ -2,6 +2,8 @@ import expressAsyncHandler from "express-async-handler";
 import { Response, Request, NextFunction } from "express";
 import { Post } from "../model/postModel";
 import { Category } from "../model/categoryModel";
+import asyncHandler from "../utils/asyncHandler";
+import CustomError from "../utils/CustomError";
 // middlewares to query the data provided by the parameter
 // after querying the requested data got to the next middleware next()
 const getPost = expressAsyncHandler(async (req: Request, res: Response) => {
@@ -11,30 +13,29 @@ const getPost = expressAsyncHandler(async (req: Request, res: Response) => {
 
 // API Controllers
 const getAPIPost = [
-  expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const query = await Post.findOne({ title: req.params.postId }).exec();
-    if (!query) {
+  asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const query = await Post.findOne({ title: req.params.postId }).exec();
+      if (!query) {
+        const err = new CustomError("Post Not found", { statusCode: 404 });
+        throw err;
+      }
       res.json({
-        message: "Post not found",
-        statusCode: 404,
+        message: "Successfully retrieved post",
+        statusCode: 200,
+        data: {
+          title: query?.title,
+          content: query?.content,
+          author: query?.author,
+          category: query?.category,
+        },
       });
-      return;
     }
-    res.json({
-      message: "Successfully retrieved post",
-      statusCode: 200,
-      data: {
-        title: query?.title,
-        content: query?.content,
-        author: query?.author,
-        category: query?.category,
-      },
-    });
-  }),
+  ),
 ];
 
 const postAPIPost = [
-  expressAsyncHandler(async (req: Request, res: Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const queryCategory = await Category.findOne({
       name: req.params.category,
     }).exec();
@@ -46,11 +47,11 @@ const postAPIPost = [
       },
     };
     if (!queryCategory) {
-      res.json({
-        message: "Unable to POST a new blog post to a non-existing category",
-        statusCode: 404,
-      });
-      return;
+      const err = new CustomError(
+        "Unable to create a new blog post to a non-existing category",
+        { statusCode: 404 }
+      );
+      throw err;
     }
     const newPost = new Post(userData);
     await newPost.save();
@@ -72,27 +73,30 @@ const postAPIPost = [
 ];
 
 const putAPIPost = [
-  expressAsyncHandler(async (req: Request, res: Response): Promise<any> => {
+  asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const userData = {
       ...req.body,
     };
     const queryPost = await Post.findOne({ title: req.params.postId }).exec();
     if (!queryPost) {
-      res.json({
-        message: "Unable to Update a non-existing blog post",
+      const err = new CustomError("Unable to Update a non-existing blog post", {
         statusCode: 404,
       });
-      return;
+      throw err;
     }
 
     // checks whether if the category needs to be updated or not.
-    if (userData.category !== null) {
+    if (userData.category !== undefined) {
       const checkExistingCategory = await Category.findOne({
         name: userData.category,
       }).exec();
 
-      if (!checkExistingCategory)
-        return res.json({ message: "Error Category does not exist" });
+      if (!checkExistingCategory) {
+        const err = new CustomError("Category does not exist", {
+          statusCode: 404,
+        });
+        throw err;
+      }
 
       const [oldCategory, newCategory] = await Promise.all([
         Category.findOneAndUpdate(
@@ -128,23 +132,28 @@ const putAPIPost = [
 ];
 
 const deleteAPIPost = [
-  expressAsyncHandler(async (req: Request, res: Response): Promise<any> => {
+  asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const queryPost = await Post.findOne({
       title: req.params.postId,
     }).exec();
     const queryCurrentCategory = await Category.findOne({
       posts: { $in: [queryPost?._id] },
-    });
+    }).exec();
 
     // instead of checking query post if it exist alone
     // check if it exists on the current category, if it exists
     // on the current category then that means it really does exist
 
-    if (!queryCurrentCategory)
-      return res.json({
-        message: `The post ${req.params.postId} does not exist`,
-        statusCode: 404,
-      });
+    if (!queryCurrentCategory) {
+      const err = new CustomError(
+        `The Post ${req.params.postId} does not exist`,
+        {
+          statusCode: 404,
+        }
+      );
+      throw err;
+    }
+
     await queryCurrentCategory
       .updateOne({
         $pull: { posts: queryPost?._id },
