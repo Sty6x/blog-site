@@ -33,16 +33,12 @@ passport.use(
     done: (arg0: any, arg1: any) => any
   ) {
     console.log("ha");
-    const queryUser = User.findOne(
-      {
-        email: jwt_payload.email,
-        password: jwt_payload.password,
-      },
-      (err: any, user: any) => {
-        if (!user) done(null, false);
-        done(null, user.email);
-      }
-    );
+    const queryUser = User.findOne({
+      email: jwt_payload.email,
+      password: jwt_payload.password,
+    });
+    if (!queryUser) done(null, false);
+    done(null, queryUser);
   })
 );
 
@@ -62,7 +58,7 @@ router.post(
         throw err;
       }
       const newToken = jwt.sign(
-        { email: queryUser.email, password: queryUser.password },
+        { email: queryUser?.email, password: queryUser?.password },
         "secret"
       );
 
