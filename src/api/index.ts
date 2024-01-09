@@ -1,4 +1,4 @@
-import express, { Response, Request } from "express";
+import express, { Response, Request, NextFunction } from "express";
 
 import {
   deleteAPIPost,
@@ -17,13 +17,18 @@ const router = express.Router();
 const postAPI = require("./post");
 const categoryAPI = require("./category");
 
+// verify jwt token on all requests
+// app.all( middleware to authenticate authorization to access api endpoints )
+// using JWT strategy use bearer token to authenticate user request to
+// every api endpoints
+// create cookie header from server to the client when a request is invoked.
+// cookie header contains the jwt-token property.
+// for every request of the client, a jwt token will be sent with the cookie everytime.
+// router.all("*", (req: Request, res: Response, next: NextFunction) => {});
+
 router.get("/", (req, res): void => {
   res.json({ message: "Welcome to my api" });
 });
-router.get("/all", (req, res): void => {
-  res.json({ message: "All Contents" });
-});
-router.use("/", categoryAPI);
 
 router.get("/:category", getAPICategory);
 router.post("/category/create", postAPICategory);
