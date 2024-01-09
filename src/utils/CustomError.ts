@@ -3,10 +3,10 @@ type t_errorData = {
 };
 
 export default class CustomError extends Error {
-  errorData: t_errorData;
-  constructor(message: string, errorData: t_errorData) {
+  statusCode: number;
+  constructor(message: string, statusCode: number) {
     super(message);
     this.message = message;
-    this.errorData = { ...errorData };
+    this.statusCode = statusCode;
   }
 }

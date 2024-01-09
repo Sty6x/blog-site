@@ -14,6 +14,7 @@ import {
 import { User } from "../model/userModel";
 import asyncHandler from "../utils/asyncHandler";
 import CustomError from "../utils/CustomError";
+import auth from "../middleware/auth";
 
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
@@ -26,7 +27,6 @@ const opt = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
 
-// THESE ARE FOR AUTHENTICATING USERS
 passport.use(
   new JwtStrategy(opt, function (
     jwt_payload: any,
@@ -54,7 +54,7 @@ router.post(
       const queryUser = await User.findOne({ email: req.body.email }).exec();
       console.log(queryUser);
       if (!queryUser) {
-        const err = new CustomError("User does not exist", { statusCode: 401 });
+        const err = new CustomError("User does not exist", 401);
         throw err;
       }
       const newToken = jwt.sign(
@@ -67,17 +67,8 @@ router.post(
   )
 );
 
-router.all(
-  "*",
-  passport.authenticate("jwt", { session: false }),
-  (req, res, next) => {
-    console.log(req.headers);
-    console.log("Do something");
-    // const newToken = jwt.sign(me, "secret");
-    // res.send({ name: me.name, token: newToken });
-    next();
-  }
-);
+// THESE ARE FOR AUTHENTICATING USERS
+router.all("*", auth);
 // THESE ARE FOR AUTHENTICATING USERS ^^
 
 router.get("/:category", getAPICategory);

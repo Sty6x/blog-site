@@ -35,5 +35,8 @@ app.use("/:category", posts);
 
 app.use((err: any, req: any, res: Response, next: any) => {
   // res.json({ message: err.message, statusCode: err.errorData.statusCode });
-  res.json({ message: err.message, statusCode: 500 });
+  res.json({
+    message: err.message,
+    statusCode: err ? err.statusCode : res.statusCode,
+  });
 });

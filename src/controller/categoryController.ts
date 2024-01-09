@@ -35,7 +35,7 @@ const getAPICategory = [
       .populate("posts")
       .exec();
     if (!query) {
-      const err = new CustomError("Category Not found", { statusCode: 404 });
+      const err = new CustomError("Category Not found", 404);
       throw err;
     }
     res.json({
@@ -83,7 +83,7 @@ const putAPICategory = [
     if (!queryCategory) {
       const err = new CustomError(
         "Unable to update a category that does not exist.",
-        { statusCode: 404 }
+        404
       );
       throw err;
     }
@@ -113,9 +113,7 @@ const deleteAPICategory = [
     ]);
 
     if (!queryCurrentCategory) {
-      const err = new CustomError("Category does not exist.", {
-        statusCode: 404,
-      });
+      const err = new CustomError("Category does not exist.", 404);
       throw err;
     }
 

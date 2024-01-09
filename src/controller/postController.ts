@@ -17,7 +17,7 @@ const getAPIPost = [
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const query = await Post.findOne({ title: req.params.postId }).exec();
       if (!query) {
-        const err = new CustomError("Post Not found", { statusCode: 404 });
+        const err = new CustomError("Post Not found", 404);
         throw err;
       }
       res.json({
@@ -49,7 +49,7 @@ const postAPIPost = [
     if (!queryCategory) {
       const err = new CustomError(
         "Unable to create a new blog post to a non-existing category",
-        { statusCode: 404 }
+        404
       );
       throw err;
     }
@@ -79,9 +79,10 @@ const putAPIPost = [
     };
     const queryPost = await Post.findOne({ title: req.params.postId }).exec();
     if (!queryPost) {
-      const err = new CustomError("Unable to Update a non-existing blog post", {
-        statusCode: 404,
-      });
+      const err = new CustomError(
+        "Unable to Update a non-existing blog post",
+        404
+      );
       throw err;
     }
 
@@ -92,9 +93,7 @@ const putAPIPost = [
       }).exec();
 
       if (!checkExistingCategory) {
-        const err = new CustomError("Category does not exist", {
-          statusCode: 404,
-        });
+        const err = new CustomError("Category does not exist", 404);
         throw err;
       }
 
@@ -147,9 +146,7 @@ const deleteAPIPost = [
     if (!queryCurrentCategory) {
       const err = new CustomError(
         `The Post ${req.params.postId} does not exist`,
-        {
-          statusCode: 404,
-        }
+        404
       );
       throw err;
     }
