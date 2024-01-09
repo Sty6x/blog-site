@@ -1,5 +1,4 @@
 import express, { Response, Request, NextFunction } from "express";
-
 import {
   deleteAPIPost,
   getAPIPost,
@@ -12,23 +11,78 @@ import {
   postAPICategory,
   putAPICategory,
 } from "../controller/categoryController";
+import { User } from "../model/userModel";
+import asyncHandler from "../utils/asyncHandler";
+import CustomError from "../utils/CustomError";
 
+const jwt = require("jsonwebtoken");
+const passport = require("passport");
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = require("passport-jwt").ExtractJwt;
 const router = express.Router();
-const postAPI = require("./post");
-const categoryAPI = require("./category");
 
-// verify jwt token on all requests
-// app.all( middleware to authenticate authorization to access api endpoints )
-// using JWT strategy use bearer token to authenticate user request to
-// every api endpoints
-// create cookie header from server to the client when a request is invoked.
-// cookie header contains the jwt-token property.
-// for every request of the client, a jwt token will be sent with the cookie everytime.
-// router.all("*", (req: Request, res: Response, next: NextFunction) => {});
+const opt = {
+  secretOrKey: "secret",
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+};
+
+// THESE ARE FOR AUTHENTICATING USERS
+passport.use(
+  new JwtStrategy(opt, function (
+    jwt_payload: any,
+    done: (arg0: any, arg1: any) => any
+  ) {
+    console.log("ha");
+    const queryUser = User.findOne(
+      {
+        email: jwt_payload.email,
+        password: jwt_payload.password,
+      },
+      (err: any, user: any) => {
+        if (!user) done(null, false);
+        done(null, user.email);
+      }
+    );
+  })
+);
 
 router.get("/", (req, res): void => {
   res.json({ message: "Welcome to my api" });
 });
+
+router.post(
+  "/login",
+  asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const { email, password } = req.body;
+      const queryUser = await User.findOne({ email: req.body.email }).exec();
+      console.log(queryUser);
+      if (!queryUser) {
+        const err = new CustomError("User does not exist", { statusCode: 401 });
+        throw err;
+      }
+      const newToken = jwt.sign(
+        { email: queryUser.email, password: queryUser.password },
+        "secret"
+      );
+
+      res.json({ message: "logged in", token: newToken });
+    }
+  )
+);
+
+router.all(
+  "*",
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    console.log(req.headers);
+    console.log("Do something");
+    // const newToken = jwt.sign(me, "secret");
+    // res.send({ name: me.name, token: newToken });
+    next();
+  }
+);
+// THESE ARE FOR AUTHENTICATING USERS ^^
 
 router.get("/:category", getAPICategory);
 router.post("/category/create", postAPICategory);
