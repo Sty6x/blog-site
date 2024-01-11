@@ -1,5 +1,14 @@
 <header>
-  <p>
-    {{data.headerContents.title}}
-  </p>
+  {{#if data}}
+    <p>
+      {{data.headerContents.title}}
+      {{data.headerContents.author}}
+      {{data.headerContents.category.name}}
+    </p>
+  {{else}}
+    <p>
+      A place where I talk about programming, technology, tutorials for various
+      things in programming and reviews on my favorite books.
+    </p>
+  {{/if}}
 </header>
