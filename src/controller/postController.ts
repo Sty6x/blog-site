@@ -16,6 +16,7 @@ const getPost = asyncHandler(async (req: Request, res: Response) => {
     message: "Successfully retrieved post",
     statusCode: 200,
     data: {
+      isPost: true,
       headerContents: {
         title: query?.title,
         author: query?.author,
