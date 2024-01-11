@@ -1,6 +1,6 @@
 <header>
   {{#if data}}
-    <span id="header-contents-container">
+    <span id="header-post-container" class="header-contents-container">
       <h1>
         {{data.headerContents.title}}
       </h1>
@@ -8,9 +8,11 @@
       {{data.headerContents.category.name}}
     </span>
   {{else}}
-    <h1>
-      A place where I talk about programming, technology, tutorials for various
-      things in programming and reviews on my favorite books.
-    </h1>
+    <span id="header-regular-container" class="header-contents-container">
+      <h1>
+        A place where I talk about programming, computer systems, tutorials for
+        various things in programming and reviews on my favorite books.
+      </h1>
+    </span>
   {{/if}}
 </header>

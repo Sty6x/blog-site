@@ -19,11 +19,17 @@ nav {
   display: flex;
   justify-content: space-between;
   border-bottom: 3px;
+  align-items: center;
+  #logo-container {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
 }
+
 header {
   display: flex;
   align-items: center;
-  height: 12em;
+  height: 14em;
   border-bottom: 3px;
 }
 
@@ -46,6 +52,7 @@ header {
 #main-contents {
   display: flex;
   height: 400px;
+  gap: 1em;
   #post-section {
     flex: 1;
     outline: 1px solid red;
@@ -53,18 +60,36 @@ header {
 }
 
 #sidebar {
+  width: 20%;
+  outline: 1px solid red;
   p {
     display: inline-block;
   }
 }
 
-#header-contents-container {
+.header-contents-container {
   h1 {
+    line-height: 1.2em;
     color: var(--accent);
-    font-size: 5rem;
     font-weight: 600;
   }
 }
+#header-regular-container {
+  h1 {
+    max-width: 30em;
+    font-size: clamp(1.4rem, 1vw + 1rem, 2.4rem);
+  }
+}
+
+#header-post-container {
+  h1 {
+    font-size: 5rem;
+  }
+}
+
 #post-section {
   font-weight: 300;
+}
+.post-contents {
+  font-size: clamp(1rem, 1vw + 0.4rem, 2rem);
 }

@@ -35,6 +35,7 @@ app.use("/api", apiIndex);
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
   // fetch isFeatured and recente blog posts
   res.render("index", {
+    isPost: false,
     headerContent:
       "A place where I talk about programming, Computer systems, tutorials for various things in programming and reviews on my favorite books.",
   });
