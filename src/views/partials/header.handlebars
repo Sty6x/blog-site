@@ -1,14 +1,16 @@
 <header>
   {{#if data}}
-    <p>
-      {{data.headerContents.title}}
+    <span id="header-contents-container">
+      <h1>
+        {{data.headerContents.title}}
+      </h1>
       {{data.headerContents.author}}
       {{data.headerContents.category.name}}
-    </p>
+    </span>
   {{else}}
-    <p>
+    <h1>
       A place where I talk about programming, technology, tutorials for various
       things in programming and reviews on my favorite books.
-    </p>
+    </h1>
   {{/if}}
 </header>

@@ -1,9 +1,14 @@
 :root {
   --background-color: #1d1d1d;
+  --accent: #f8fae5;
+  --accent1: #cecdfa;
+  --primary: #43766c;
+  --priamry-selection: #43766c38;
   --text-color: #ffffff;
   --border-colors: #373737;
 }
 body {
+  font-family: "Be Vietnam Pro", sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
   min-height: 100dvh;
@@ -16,7 +21,9 @@ nav {
   border-bottom: 3px;
 }
 header {
-  padding: 5em 2em;
+  display: flex;
+  align-items: center;
+  height: 12em;
   border-bottom: 3px;
 }
 
@@ -46,7 +53,18 @@ header {
 }
 
 #sidebar {
-  & > p {
+  p {
     display: inline-block;
   }
+}
+
+#header-contents-container {
+  h1 {
+    color: var(--accent);
+    font-size: 5rem;
+    font-weight: 600;
+  }
+}
+#post-section {
+  font-weight: 300;
 }
