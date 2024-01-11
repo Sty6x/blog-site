@@ -3,7 +3,9 @@ import { getPost } from "../controller/postController";
 const router = express.Router();
 
 router.get("/", (req: Request, res: Response, next: NextFunction) => {
-  next();
+  console.log("posts route");
+  res.json({ message: "Hello" });
+  // next();
 });
 
 router.get("/:postId", getPost);

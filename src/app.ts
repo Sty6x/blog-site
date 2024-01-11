@@ -2,6 +2,7 @@ import express from "express";
 import { engine } from "express-handlebars";
 import { Application, Request, Response } from "express-serve-static-core";
 import mongoose from "mongoose";
+import path from "path";
 const cors = require("cors");
 const app: Application = express();
 const port = 3000;
@@ -16,6 +17,7 @@ async function startMongooseServer(uri: string): Promise<void> {
 }
 startMongooseServer(uri).catch((err) => console.log(err));
 
+app.use(express.static(path.join(__dirname, "public")));
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 app.set("views", "./src/views");
@@ -33,6 +35,7 @@ app.use("/api", apiIndex);
 app.use("/", category);
 app.use("/:category", posts);
 
+// Error handling middleware
 app.use((err: any, req: any, res: Response, next: any) => {
   // res.json({ message: err.message, statusCode: err.errorData.statusCode });
   res.json({
