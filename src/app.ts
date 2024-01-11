@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction } from "express";
 import { engine } from "express-handlebars";
 import { Application, Request, Response } from "express-serve-static-core";
 import mongoose from "mongoose";
@@ -32,6 +32,13 @@ app.listen(port, () => {
 app.use("/api", apiIndex);
 
 // Page Route Resources
+app.get("/", (req: Request, res: Response, next: NextFunction) => {
+  // fetch isFeatured and recente blog posts
+  res.render("index", {
+    headerText:
+      "A place where I talk about programming, Computer systems, tutorials for various things in programming and reviews on my favorite books.",
+  });
+});
 app.use("/", category);
 app.use("/:category", posts);
 
