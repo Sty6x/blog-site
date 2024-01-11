@@ -1,8 +1,12 @@
 import express, { NextFunction } from "express";
-import { engine } from "express-handlebars";
+import { ExpressHandlebars, engine, create } from "express-handlebars";
 import { Application, Request, Response } from "express-serve-static-core";
 import mongoose from "mongoose";
 import path from "path";
+import { Post } from "./model/postModel";
+import asyncHandler from "./utils/asyncHandler";
+import CustomError from "./utils/CustomError";
+import { allowedNodeEnvironmentFlags } from "process";
 const cors = require("cors");
 const app: Application = express();
 const port = 3000;
@@ -17,8 +21,11 @@ async function startMongooseServer(uri: string): Promise<void> {
 }
 startMongooseServer(uri).catch((err) => console.log(err));
 
+const handlebars = create({
+  runtimeOptions: { allowProtoPropertiesByDefault: true },
+});
 app.use(express.static(path.join(__dirname, "public")));
-app.engine("handlebars", engine());
+app.engine("handlebars", handlebars.engine);
 app.set("view engine", "handlebars");
 app.set("views", "./src/views");
 app.use(express.urlencoded());
@@ -32,19 +39,30 @@ app.listen(port, () => {
 app.use("/api", apiIndex);
 
 // Page Route Resources
-app.get("/", (req: Request, res: Response, next: NextFunction) => {
-  // fetch isFeatured and recente blog posts
-  res.render("index", {
-    isPost: false,
-    pageTitle: "FEATURE POSTS",
-    headerContent:
-      "A place where I talk about programming, Computer systems, tutorials for various things in programming and reviews on my favorite books.",
-  });
-});
+app.get(
+  "/",
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const queryFeaturedPosts = await Post.find({ isFeatured: true }).exec();
+    if (!queryFeaturedPosts) {
+      const err = new CustomError("Unable to fetch posts", 404);
+      throw err;
+    }
+    console.log(queryFeaturedPosts[0].title);
+    console.log(queryFeaturedPosts[1].title);
+    // fetch isFeatured and recente blog posts
+    res.render("index", {
+      isPost: false,
+      pageTitle: "FEATURE POSTS",
+      posts: queryFeaturedPosts,
+      headerContent:
+        "A place where I talk about programming, Computer systems, tutorials for various things in programming and reviews on my favorite books.",
+    });
+  })
+);
 app.use("/", category);
 app.use("/:category", posts);
 
-// Error handling middleware
+// API Error handling middleware
 app.use((err: any, req: any, res: Response, next: any) => {
   // res.json({ message: err.message, statusCode: err.errorData.statusCode });
   res.json({

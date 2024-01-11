@@ -2,8 +2,13 @@
     {{> sidebarcontainer}}
     <section class="post-section">
         <p id="page-query-title">{{pageTitle}}</p>
-        <ul id="featured-posts">
-
+        <ul id="featured-posts-container" class="blog-posts">
+            {{#each posts}}
+               <li class="blog-post-item">
+                <h3>{{this.title}}</h3>
+                <p>{{this.content}}</p>
+               </li>
+            {{/each}}
         </ul>
     </section>
 </main>
