@@ -3,7 +3,7 @@
   --accent: #f8fae5;
   --accent1: #cecdfa;
   --primary: #43766c;
-  --priamry-selection: #43766c38;
+  --primary-selection: #43766c60;
   --text-color: #ffffff;
   --border-colors: #373737;
 }
@@ -47,6 +47,9 @@ header {
 #inner-layout-container {
   max-width: 80%;
   min-width: 80%;
+  & > :last-child {
+    margin-top: 2em;
+  }
 }
 
 #main-contents {
@@ -61,10 +64,48 @@ header {
 
 #sidebar {
   width: 20%;
-  outline: 1px solid red;
+  height: 300px;
   p {
     display: inline-block;
   }
+}
+.sidebar-contents-container > ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  li > a {
+    padding: 0.6em 0.8em;
+    display: block;
+    width: 100%;
+  }
+  li {
+    border-left: 3px solid transparent;
+  }
+  li:hover {
+    border-left: 3px solid var(--primary);
+  }
+}
+.selected-link {
+  background-color: var(--primary-selection);
+  border-left: 3px solid var(--primary) !important;
+  a {
+    padding: 1em 0.8em !important;
+    color: var(--accent);
+    font-weight: 700;
+  }
+}
+.sidebar-contents-container {
+  display: block;
+  position: relative;
+  height: fit-content;
+}
+.sidebar-contents-container::before {
+  display: inline-block;
+  content: "";
+  width: 3px;
+  height: 100%;
+  background-color: var(--accent);
 }
 
 .header-contents-container {
