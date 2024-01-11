@@ -101,20 +101,27 @@ header {
     display: block;
     width: 100%;
   }
-  li {
-    border-left: 3px solid transparent;
+
+  li > a:hover {
+    text-decoration: underline;
   }
-  li:hover {
-    border-left: 3px solid var(--primary);
+  li {
+    position: inherit;
+    z-index: 99;
+    border-left: 3px solid transparent;
   }
 }
 .selected-link {
   background-color: var(--primary-selection);
   border-left: 4px solid var(--primary) !important;
+
   a {
     padding: 1em 1em !important;
     color: var(--accent);
     font-weight: 700;
+    &:hover {
+      text-decoration: none !important;
+    }
   }
 }
 .sidebar-contents-container {
@@ -123,6 +130,7 @@ header {
   height: fit-content;
 }
 .sidebar-contents-container::before {
+  z-index: 1;
   display: inline-block;
   position: absolute;
   content: "";
