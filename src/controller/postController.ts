@@ -6,9 +6,24 @@ import asyncHandler from "../utils/asyncHandler";
 import CustomError from "../utils/CustomError";
 // middlewares to query the data provided by the parameter
 // after querying the requested data got to the next middleware next()
-const getPost = expressAsyncHandler(async (req: Request, res: Response) => {
-  console.log(req.params);
-  res.render("post", { param: req.params.postId });
+const getPost = asyncHandler(async (req: Request, res: Response) => {
+  const query = await Post.findOne({ title: req.params.postId }).exec();
+  if (!query) {
+    const err = new CustomError("Post Not found", 404);
+    throw err;
+  }
+  res.render("post", {
+    message: "Successfully retrieved post",
+    statusCode: 200,
+    data: {
+      headerContents: {
+        title: query?.title,
+        author: query?.author,
+        category: query?.category,
+      },
+      content: query?.content,
+    },
+  });
 });
 
 // API Controllers
