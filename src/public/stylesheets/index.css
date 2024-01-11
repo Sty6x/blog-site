@@ -1,0 +1,25 @@
+:root {
+  --background-color: #1d1d1d;
+  --text-color: #ffffff;
+}
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  min-height: 100dvh;
+}
+
+nav {
+  padding: 1em 2em;
+  display: flex;
+  justify-content: space-between;
+}
+
+#layout-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#inner-layout-container {
+  max-width: 80%;
+  min-width: 80%;
+}

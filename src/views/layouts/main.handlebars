@@ -3,12 +3,18 @@
     <meta charset="utf-8" />
     <title>Example App</title>
     <script defer="true" src="/javascript/index.js"></script>
+    <link rel="stylesheet" href="/stylesheets/cssreset.css"></link>
+    <link rel="stylesheet" href="/stylesheets/index.css"></link>
   </head>
   <body>
     {{> navbar}}
-    {{> header}}
 
-    {{{body}}}
+   <div id="layout-container">
+     <div id="inner-layout-container">
+      {{> header}}
+      {{{body}}}
+     </div>
+   </div>
 
   </body>
 </html>
