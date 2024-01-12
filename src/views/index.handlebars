@@ -10,7 +10,7 @@
                   <span>{{this.category.name}}</span>
                 </span>
                 <p>{{this.content}}</p>
-                <span class="blog-post-item-link"><a href="/">Read more</a></span>
+                <span class="blog-post-item-link"><a href={{interpolateURLString this.category.name this.title}}>Read more</a></span>
                </li>
 
             {{/each}}

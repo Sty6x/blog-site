@@ -27,6 +27,9 @@ const handlebars = create({
     isArrayEmpty: (array: any) => {
       return array.length == 0 ? true : false;
     },
+    interpolateURLString: (category: string, endpoint: string) => {
+      return `/${category}/${endpoint}`;
+    },
   },
 });
 app.use(express.static(path.join(__dirname, "public")));
