@@ -141,6 +141,7 @@ const putAPIPost = [
         content: userData?.content,
         author: userData?.author,
         category: userData?.category,
+        isFeatured: userData?.isFeatured,
       },
     });
   }),

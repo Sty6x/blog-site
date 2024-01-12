@@ -47,12 +47,10 @@ app.get(
       const err = new CustomError("Unable to fetch posts", 404);
       throw err;
     }
-    console.log(queryFeaturedPosts[0].title);
-    console.log(queryFeaturedPosts[1].title);
     // fetch isFeatured and recente blog posts
     res.render("index", {
       isPost: false,
-      pageTitle: "FEATURE POSTS",
+      pageTitle: "FEATURED POSTS",
       data: { posts: queryFeaturedPosts },
       headerContent:
         "A place where I talk about programming, Computer systems, tutorials for various things in programming and reviews on my favorite books.",

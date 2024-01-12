@@ -4,6 +4,7 @@ export const postSchema = new Schema<t_post>({
   title: { type: String, required: true },
   author: { type: String, required: true },
   content: { type: String, required: true },
+  isFeatured: Boolean,
   dateAdded: Date,
   lastUpdated: Date,
   category: {
