@@ -36,7 +36,11 @@ const handlebars = create({
     isArrayEmpty: (array: any) => {
       return array.length == 0 ? true : false;
     },
-    interpolateURLString: (category: string, endpoint: string): string => {
+    interpolateURLString: (category: string, endpoint?: string): string => {
+      if (!endpoint) {
+        console.log("hey");
+        return `/${category}`;
+      }
       return `/${category}/${endpoint}`;
     },
     interpolateTitle: (postTitle: string): string => {

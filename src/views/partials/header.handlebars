@@ -1,11 +1,22 @@
 <header>
   {{#if isPost}}
     <span id="header-post-container" class="header-contents-container">
+      <span id="path">
+        <a href="/">Home</a>
+        >
+        <a href={{interpolateURLString data.category.name null}}>
+          {{interpolateTitle data.category.name}}
+        </a>
+        >
+        <a href={{interpolateURLString data.category.name data.title}}>
+          {{interpolateTitle data.title}}
+        </a>
+      </span>
       <h1>
-        {{data.headerContents.title}}
+        {{data.title}}
       </h1>
-      {{data.headerContents.author}}
-      {{data.headerContents.category.name}}
+      {{data.author}}
+      {{data.category.name}}
     </span>
   {{else}}
     <span id="header-regular-container" class="header-contents-container">
