@@ -57,8 +57,8 @@ header {
 }
 #inner-layout-container {
   margin-bottom: 2em;
-  max-width: 80%;
-  min-width: 80%;
+  max-width: 70em;
+  min-width: 40em;
   & > :last-child {
     margin-top: 2em;
   }
