@@ -53,7 +53,7 @@ app.get(
     res.render("index", {
       isPost: false,
       pageTitle: "FEATURE POSTS",
-      posts: queryFeaturedPosts,
+      data: { posts: queryFeaturedPosts },
       headerContent:
         "A place where I talk about programming, Computer systems, tutorials for various things in programming and reviews on my favorite books.",
     });

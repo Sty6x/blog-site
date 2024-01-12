@@ -205,8 +205,52 @@ header {
   #page-query-title {
     font-weight: 700;
     font-size: 1.6rem;
+    color: var(--primary);
   }
 }
 #blog-post-contents {
   font-size: clamp(1rem, 1vw + 0.4rem, 2rem);
+}
+#featured-posts-container {
+  margin-top: 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+.blog-post-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+  .blog-post-item-title {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    h3 {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 1.6rem;
+    }
+  }
+  p {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* number of lines to show */
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    color: var(--light-shade);
+    font-size: 1.2rem;
+    line-height: 1.3rem;
+  }
+
+  .blog-post-item-link {
+    text-transform: uppercase;
+    margin-bottom: 1em;
+    color: var(--accent1);
+    a {
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+  }
 }

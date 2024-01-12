@@ -3,11 +3,16 @@
     <section class="post-section">
         <p id="page-query-title">{{pageTitle}}</p>
         <ul id="featured-posts-container" class="blog-posts">
-            {{#each posts}}
+            {{#each data.posts}}
                <li class="blog-post-item">
-                <h3>{{this.title}}</h3>
+                <span class="blog-post-item-title">
+                  <h3>{{this.title}}</h3>
+                  <span>{{this.category.name}}</span>
+                </span>
                 <p>{{this.content}}</p>
+                <span class="blog-post-item-link"><a href="/">Read more</a></span>
                </li>
+
             {{/each}}
         </ul>
     </section>
