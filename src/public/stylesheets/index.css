@@ -70,11 +70,12 @@ header {
   gap: 3em;
   .post-section {
     flex: 1;
-    /* outline: 1px solid red; */
   }
 }
 
 #sidebar {
+  position: sticky;
+  top: 2em;
   display: flex;
   /* align-items: center; */
   flex-direction: column;
@@ -145,6 +146,7 @@ header {
     padding: 0.6em 1em;
     display: block;
     width: 100%;
+    box-sizing: border-box;
   }
 
   li > a:hover {
@@ -179,7 +181,7 @@ header {
   display: inline-block;
   position: absolute;
   content: "";
-  width: 2px;
+  width: 1px;
   height: 100%;
   background-color: #ffffff60;
 }
@@ -205,6 +207,7 @@ header {
 }
 
 .post-section {
+  width: 70em;
   font-weight: 300;
   #page-query-title {
     font-weight: 700;
