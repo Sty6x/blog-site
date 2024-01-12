@@ -7,6 +7,7 @@ import { Post } from "./model/postModel";
 import asyncHandler from "./utils/asyncHandler";
 import CustomError from "./utils/CustomError";
 import { allowedNodeEnvironmentFlags } from "process";
+import interpolateString from "./utils/interpolateString";
 const cors = require("cors");
 const app: Application = express();
 const port = 3000;
@@ -79,6 +80,27 @@ app.get(
       isPost: false,
       pageTitle: "FEATURED POSTS",
       data: { posts: queryFeaturedPosts },
+    });
+  })
+);
+
+// sanitize this route handler middleware
+app.get(
+  "/search",
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    console.log(interpolateString(req.query.search as string));
+    const queryPosts = await Post.find({
+      title: interpolateString(req.query.search as string),
+    }).exec();
+    if (!queryPosts) {
+      const err = new CustomError("Unable to fetch posts", 404);
+      throw err;
+    }
+    // fetch isFeatured and recente blog posts
+    res.render("index", {
+      isPost: false,
+      pageTitle: `Results for ${req.query.search}`,
+      data: { posts: Array.isArray(queryPosts) ? queryPosts : [queryPosts] },
     });
   })
 );
