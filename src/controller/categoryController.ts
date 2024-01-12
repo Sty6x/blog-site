@@ -4,6 +4,7 @@ import { Category } from "../model/categoryModel";
 import { Post } from "../model/postModel";
 import mongoose, { Query, Schema } from "mongoose";
 import CustomError from "../utils/CustomError";
+import { populate } from "dotenv";
 
 // middlewares to query the data provided by the parameter
 // after querying the requested data got to the next middleware next()
@@ -12,13 +13,17 @@ const getCategory = asyncHandler(
   async (req: Request, res: Response): Promise<any> => {
     const queryCategory = await Category.findOne({
       name: req.params.category,
-    }).exec();
+    })
+      .populate("posts")
+      .exec();
     if (!queryCategory)
       return res.json({ message: "Category does not exist", statusCode: 404 });
-    res.json({
+    res.render("category", {
       message: `Retrieved ${req.params.category} category`,
       statusCode: 200,
       data: {
+        isPost: false,
+        pageTitle: queryCategory?.name,
         name: queryCategory?.name,
         _id: queryCategory?._id,
         posts: queryCategory?.posts,

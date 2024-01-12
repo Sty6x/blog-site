@@ -1,16 +1,19 @@
-<h1>Specific Category Page</h1>
-<h1>List of all the available Post for this category</h1>
-<ul>
-  <li>
-    <a href="/books/comething">books/comething </a>
-  </li>
-  <li>
+<main id="main-contents">
+    {{> sidebarcontainer}}
+    <section class="post-section">
+        <p id="page-query-title">{{pageTitle}}</p>
+        <ul id="featured-posts-container" class="blog-posts">
+            {{#each data.posts}}
+               <li class="blog-post-item">
+                <span class="blog-post-item-title">
+                  <h3>{{this.title}}</h3>
+                  <span>{{this.category.name}}</span>
+                </span>
+                <p>{{this.content}}</p>
+                <span class="blog-post-item-link"><a href="/">Read more</a></span>
+               </li>
 
-    <a href="/tech/what">tech/what </a>
-  </li>
-  <li>
-
-    <a href="/tutorials/heh">tutorials/heh</a>
-  </li>
-</ul>
-<a href="..">back</a>
+            {{/each}}
+        </ul>
+    </section>
+</main>

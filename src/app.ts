@@ -52,8 +52,6 @@ app.get(
       isPost: false,
       pageTitle: "FEATURED POSTS",
       data: { posts: queryFeaturedPosts },
-      headerContent:
-        "A place where I talk about programming, Computer systems, tutorials for various things in programming and reviews on my favorite books.",
     });
   })
 );
