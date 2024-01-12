@@ -23,6 +23,11 @@ startMongooseServer(uri).catch((err) => console.log(err));
 
 const handlebars = create({
   runtimeOptions: { allowProtoPropertiesByDefault: true },
+  helpers: {
+    isArrayEmpty: (array: any) => {
+      return array.length == 0 ? true : false;
+    },
+  },
 });
 app.use(express.static(path.join(__dirname, "public")));
 app.engine("handlebars", handlebars.engine);
