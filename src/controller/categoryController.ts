@@ -4,7 +4,6 @@ import { Category } from "../model/categoryModel";
 import { Post } from "../model/postModel";
 import mongoose, { Query, Schema } from "mongoose";
 import CustomError from "../utils/CustomError";
-import { populate } from "dotenv";
 
 // middlewares to query the data provided by the parameter
 // after querying the requested data got to the next middleware next()

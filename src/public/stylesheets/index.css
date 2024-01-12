@@ -40,7 +40,7 @@ nav {
 header {
   display: flex;
   align-items: center;
-  height: 12em;
+  height: 14em;
   border-bottom: 3px;
 }
 
@@ -254,8 +254,8 @@ header {
     line-clamp: 4;
     -webkit-box-orient: vertical;
     color: var(--light-shade);
-    font-size: 1.2rem;
-    line-height: 1.4rem;
+    font-size: 1.4rem;
+    line-height: 1.6rem;
   }
 
   .blog-post-item-link {
@@ -263,8 +263,11 @@ header {
     margin-bottom: 1em;
     color: var(--accent1);
     a {
-      font-size: 0.8rem;
-      font-weight: 700;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    a:hover {
+      text-decoration: underline;
     }
   }
 }
