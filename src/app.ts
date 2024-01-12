@@ -21,14 +21,33 @@ async function startMongooseServer(uri: string): Promise<void> {
 }
 startMongooseServer(uri).catch((err) => console.log(err));
 
+// when creating a post assume that title white space do not contain `-`
+// eg: what-is-a-blank
+
+// when rendering to the client replace the `-` symbol
+// how to replace?
+// for every character in the title[numOfChars]
+// check each
+
 const handlebars = create({
   runtimeOptions: { allowProtoPropertiesByDefault: true },
   helpers: {
     isArrayEmpty: (array: any) => {
       return array.length == 0 ? true : false;
     },
-    interpolateURLString: (category: string, endpoint: string) => {
+    interpolateURLString: (category: string, endpoint: string): string => {
       return `/${category}/${endpoint}`;
+    },
+    interpolateTitle: (postTitle: string): string => {
+      let newTitle: string = "";
+      for (let i = 0; i < postTitle.length; i++) {
+        if (postTitle[i] == "-") {
+          newTitle += " ";
+        } else {
+          newTitle += postTitle[i];
+        }
+      }
+      return newTitle;
     },
   },
 });
