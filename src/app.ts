@@ -6,8 +6,11 @@ import path from "path";
 import { Post } from "./model/postModel";
 import asyncHandler from "./utils/asyncHandler";
 import CustomError from "./utils/CustomError";
-import { allowedNodeEnvironmentFlags } from "process";
+import MarkdownIt from "markdown-it";
 import interpolateString from "./utils/interpolateString";
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
+const markdown = new MarkdownIt("commonmark");
 const cors = require("cors");
 const app: Application = express();
 const port = 3000;
@@ -38,7 +41,6 @@ const handlebars = create({
     },
     interpolateURLString: (category: string, endpoint?: string): string => {
       if (!endpoint) {
-        console.log("hey");
         return `/${category}`;
       }
       return `/${category}/${endpoint}`;
@@ -53,6 +55,11 @@ const handlebars = create({
         }
       }
       return newTitle;
+    },
+    renderMarkdown: (blogContent: string): any => {
+      const renderMarkdown = markdown.render(blogContent);
+      const toDom = new JSDOM(renderMarkdown);
+      return renderMarkdown;
     },
   },
 });

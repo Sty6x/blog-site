@@ -1,6 +1,6 @@
 <main id="main-contents">
     {{> sidebarcontainer}}
     <section class="post-section" id="blog-post-contents">
-        {{data.content}}
+        {{{renderMarkdown data.content}}}
     </section>
 </main>
