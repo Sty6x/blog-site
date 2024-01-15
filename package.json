@@ -27,6 +27,7 @@
     "express": "^4.18.2",
     "express-async-handler": "^1.2.0",
     "express-handlebars": "^7.1.2",
+    "github-markdown-css": "^5.5.0",
     "jsdom": "^23.2.0",
     "markdown-it": "^14.0.0",
     "mongodb": "^6.3.0",
