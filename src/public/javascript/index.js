@@ -2,6 +2,18 @@ const locationEvent = new CustomEvent("updateActiveLink", {
   detail: location.pathname,
 });
 
+function interpolateLinkTitle(linkTitle) {
+  let newTitle = "";
+  for (let i = 0; i < linkTitle.length; i++) {
+    if (linkTitle[i] == "%20") {
+      newTitle += " ";
+    } else {
+      newTitle += linkTitle[i];
+    }
+  }
+  return newTitle;
+}
+
 function resetLinks(links) {
   return links.map((link) => {
     if (link.classList.contains("selected-link")) {
@@ -11,10 +23,8 @@ function resetLinks(links) {
     return link;
   });
 }
-function setActiveLink(navLinksContainer) {
-  if (!navLinksContainer) return;
-  const navLinks = Array.from(navLinksContainer.children);
-  const links = resetLinks(navLinks);
+function setLinkActive(links) {
+  console.log(location.hash);
   links.forEach((link) => {
     const anchor = link.children[0].href.substr(-location.pathname.length);
     if (anchor === location.pathname) {
@@ -22,51 +32,59 @@ function setActiveLink(navLinksContainer) {
       link.setAttribute("class", "selected-link");
       return;
     }
+    if (location.hash[0] === "#") {
+      console.log("is hashed");
+      console.log(interpolateLinkTitle(location.hash));
+    }
   });
 }
+function setActiveSideNavLink(navLinksContainer) {
+  if (!navLinksContainer) return;
+  const navLinks = Array.from(navLinksContainer.children);
+  const links = resetLinks(navLinks);
+  setLinkActive(links);
+}
 
-function setActiveTableContentsLink(tableContentsContainer) {
+function createContentTableLinks(tableContentsContainer) {
   const h1List = Array.from(document.querySelectorAll("h1"));
   const tableContentsLinks = Array.from(tableContentsContainer);
 
-  const newH1List = h1List.filter((element, i) => {
+  const newH1List = h1List.filter((header, i) => {
     if (i !== 0) {
-      const content = element.textContent;
-      element.setAttribute("id", content);
-      return element;
+      const content = header.textContent;
+      header.setAttribute("id", content);
+      return header;
     }
   });
-  for (let i = 0; i < newH1List.length; i++) {
+  const newLinks = newH1List.map((header) => {
     const newLink = document.createElement("a");
     const liContainer = document.createElement("li");
-    newLink.href = `#${newH1List[i].textContent}`;
-    newLink.textContent = newH1List[i].textContent;
+    newLink.href = `#${header.textContent}`;
+    newLink.textContent = header.textContent;
 
     liContainer.appendChild(newLink);
     tableContentsContainer.appendChild(liContainer);
-  }
 
-  console.log(newH1List);
+    return liContainer;
+  });
 }
 
 window.addEventListener("updateActiveLink", (e) => {
   const navLinksContainer = document.querySelector("#nav-links-container > ul");
-
   if (!navLinksContainer) {
     const tableContentsContainer = document.querySelector(
       "#table-contents-container > ul"
     );
-    setActiveTableContentsLink(tableContentsContainer);
-
+    createContentTableLinks(tableContentsContainer);
     return;
   }
-  setActiveLink(navLinksContainer);
+  setActiveSideNavLink(navLinksContainer);
 });
 window.addEventListener("load", () => window.dispatchEvent(locationEvent));
-
-// get all of the h1s and add an id that corresponds to their content
-// and get all link from the navLinks
-// (maybe nest h2s under h1 links)
-// take their textContent
-// assign their id values to that text content
-// assign the href value to that text content
+window.addEventListener("hashchange", () => {
+  const tableContentsContainer = document.querySelector(
+    "#table-contents-container > ul"
+  );
+  const tableContentLinks = Array.from(tableContentsContainer.children);
+  setLinkActive(tableContentLinks);
+});
