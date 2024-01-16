@@ -20,9 +20,9 @@ const getCategory = asyncHandler(
     res.render("category", {
       message: `Retrieved ${req.params.category} category`,
       statusCode: 200,
+      pageTitle: queryCategory?.name.toUpperCase(),
       data: {
         isPost: false,
-        pageTitle: queryCategory?.name,
         name: queryCategory?.name,
         _id: queryCategory?._id,
         posts: queryCategory?.posts,

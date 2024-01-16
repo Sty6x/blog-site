@@ -9,7 +9,7 @@
                 {{#each data.posts}}
                    <li class="blog-post-item">
                     <span class="blog-post-item-title">
-                      <h3>{{interpolateTitle this.title}}</h3>
+                      <a href={{interpolateURLString this.category.name this.title}}>{{interpolateTitle this.title}}</a>
                       <span>{{this.category.name}}</span>
                     </span>
                     <p>{{this.content}}</p>

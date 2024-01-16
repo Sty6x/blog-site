@@ -45,6 +45,10 @@ const handlebars = create({
       }
       return `/${category}/${endpoint}`;
     },
+    checkEmptyString: (title: string) => {
+      console.log(title);
+      return title !== "" ? true : false;
+    },
     interpolateTitle: (postTitle: string): string => {
       let newTitle: string = "";
       for (let i = 0; i < postTitle.length; i++) {
