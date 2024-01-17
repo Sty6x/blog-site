@@ -25,14 +25,6 @@ async function startMongooseServer(uri: string): Promise<void> {
 }
 startMongooseServer(uri).catch((err) => console.log(err));
 
-// when creating a post assume that title white space do not contain `-`
-// eg: what-is-a-blank
-
-// when rendering to the client replace the `-` symbol
-// how to replace?
-// for every character in the title[numOfChars]
-// check each
-
 const handlebars = create({
   runtimeOptions: { allowProtoPropertiesByDefault: true },
   helpers: {
@@ -45,8 +37,17 @@ const handlebars = create({
       }
       return `/${category}/${endpoint}`;
     },
+    extractElement: (blogContent: string): string => {
+      const parseMarkdown = markdown.render(blogContent);
+      const toDom = new JSDOM(parseMarkdown);
+      const para = Array.from(toDom.window.document.querySelectorAll("p"));
+      const [filteredPara]: any = para.filter((p: any) => {
+        console.log(p.textContent.length);
+        if (p.textContent.length > 200) return p;
+      });
+      return filteredPara.textContent;
+    },
     checkEmptyString: (title: string) => {
-      console.log(title);
       return title !== "" ? true : false;
     },
     interpolateTitle: (postTitle: string): string => {
@@ -60,10 +61,10 @@ const handlebars = create({
       }
       return newTitle;
     },
-    renderMarkdown: (blogContent: string): any => {
-      const renderMarkdown = markdown.render(blogContent);
-      const toDom = new JSDOM(renderMarkdown);
-      return renderMarkdown;
+    parseMarkdown: (blogContent: string): any => {
+      const parseMarkdown = markdown.render(blogContent);
+      const toDom = new JSDOM(parseMarkdown);
+      return parseMarkdown;
     },
   },
 });
