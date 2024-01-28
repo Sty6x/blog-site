@@ -57,7 +57,11 @@ const handlebars = create({
         if (postTitle[i] == "-") {
           newTitle += " ";
         } else {
-          newTitle += postTitle[i];
+          if (i === 0) {
+            newTitle += postTitle[i].toLocaleUpperCase();
+          } else {
+            newTitle += postTitle[i];
+          }
         }
       }
       return newTitle;
