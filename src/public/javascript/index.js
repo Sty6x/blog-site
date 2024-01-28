@@ -47,8 +47,8 @@ function setLinkActive(links) {
 function setActiveSidebarNavLink(navLinksContainer) {
   if (!navLinksContainer) return;
   const navLinks = Array.from(navLinksContainer.children);
-  const links = resetLinks(navLinks);
-  setLinkActive(links);
+  resetLinks(navLinks);
+  setLinkActive(navLinks);
 }
 
 function setActiveContentTableLink() {

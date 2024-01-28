@@ -25,6 +25,7 @@ async function startMongooseServer(uri: string): Promise<void> {
 }
 startMongooseServer(uri).catch((err) => console.log(err));
 
+// handlebars helpers
 const handlebars = create({
   runtimeOptions: { allowProtoPropertiesByDefault: true },
   helpers: {
