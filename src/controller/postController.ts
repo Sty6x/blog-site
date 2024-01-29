@@ -4,6 +4,7 @@ import { Post } from "../model/postModel";
 import { Category } from "../model/categoryModel";
 import asyncHandler from "../utils/asyncHandler";
 import CustomError from "../utils/CustomError";
+import { format } from "date-fns";
 // middlewares to query the data provided by the parameter
 // after querying the requested data got to the next middleware next()
 const getPost = asyncHandler(async (req: Request, res: Response) => {
@@ -16,7 +17,16 @@ const getPost = asyncHandler(async (req: Request, res: Response) => {
     message: "Successfully retrieved post",
     statusCode: 200,
     isPost: true,
-    data: query,
+    data: {
+      content: query.content,
+      title: query.title,
+      author: query.author,
+      dateAdded: format(
+        query.dateAdded ? query.dateAdded : new Date(),
+        "PP"
+      ).toString(),
+      category: query.category,
+    },
   });
 });
 

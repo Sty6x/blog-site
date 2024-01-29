@@ -8,6 +8,7 @@ import asyncHandler from "./utils/asyncHandler";
 import CustomError from "./utils/CustomError";
 import MarkdownIt from "markdown-it";
 import interpolateString from "./utils/interpolateString";
+import { format, formatDate } from "date-fns";
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 const markdown = new MarkdownIt("commonmark");
@@ -29,6 +30,10 @@ startMongooseServer(uri).catch((err) => console.log(err));
 const handlebars = create({
   runtimeOptions: { allowProtoPropertiesByDefault: true },
   helpers: {
+    setToString: (data: string) => {
+      const stringData = format(data, "PP");
+      return stringData.toString();
+    },
     isArrayEmpty: (array: any) => {
       return array.length == 0 ? true : false;
     },
@@ -43,7 +48,6 @@ const handlebars = create({
       const toDom = new JSDOM(parseMarkdown);
       const para = Array.from(toDom.window.document.querySelectorAll("p"));
       const [filteredPara]: any = para.filter((p: any) => {
-        console.log(p.textContent.length);
         if (p.textContent.length > 200) return p;
       });
       return filteredPara.textContent;
