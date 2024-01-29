@@ -50,10 +50,53 @@ nav {
   border-bottom: 3px;
   align-items: center;
   #logo-container {
+    position: relative;
     a {
       font-size: 1.5rem;
       color: var(--accent);
       font-weight: 700;
+    }
+  }
+
+  #logo-container::after {
+    margin-top: 0.3em;
+    position: absolute;
+    content: "";
+    display: block;
+    width: 0%;
+    height: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 150ms ease-in-out;
+  }
+  #logo-container:hover::after {
+    width: 100%;
+    background-color: var(--primary);
+    transition: width 150ms ease-in-out;
+  }
+
+  #github-container {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    a {
+      display: block;
+      background-image: url("../assets/icons/github-repo-git-octocat-svgrepo-com.svg");
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: 2em;
+      height: 100%;
+      transition: all 150ms ease-in-out;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      transform: translate(0);
+    }
+
+    a:hover {
+      transform: translateY(-3px);
+      border: var(--primary) 2px solid;
+      transition: all 150ms ease-in-out;
     }
   }
 }
