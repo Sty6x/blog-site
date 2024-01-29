@@ -7,6 +7,24 @@
   --text-color: #ffffff;
   --border-colors: #373737;
 }
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background-color: #ffffff20;
+}
+
+::-webkit-scrollbar-button {
+  background-color: var(--primary-selection);
+}
+
+::-webkit-scrollbar-button:hover {
+  background-color: var(--primary);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+}
+
 html {
   min-height: 100dvh;
 }
