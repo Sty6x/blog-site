@@ -7,8 +7,6 @@ import { Post } from "./model/postModel";
 import asyncHandler from "./utils/asyncHandler";
 import CustomError from "./utils/CustomError";
 import MarkdownIt from "markdown-it";
-import interpolateString from "./utils/interpolateString";
-import { format, formatDate } from "date-fns";
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 const markdown = new MarkdownIt("commonmark");

@@ -1,8 +1,11 @@
-export default function interpolateString(postTitle: string): string {
+export default function interpolateString(
+  postTitle: string,
+  to: string
+): string {
   let newTitle: string = "";
   for (let i = 0; i < postTitle.length; i++) {
     if (postTitle[i] == " ") {
-      newTitle += "-";
+      newTitle += to;
     } else {
       newTitle += postTitle[i];
     }
