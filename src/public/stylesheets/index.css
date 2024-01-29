@@ -50,8 +50,11 @@ nav {
   border-bottom: 3px;
   align-items: center;
   #logo-container {
-    font-size: 1.5rem;
-    font-weight: 600;
+    a {
+      font-size: 1.5rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
   }
 }
 /* both */
