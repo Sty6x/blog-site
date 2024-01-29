@@ -76,12 +76,16 @@ header {
   #location-path {
     color: var(--primary);
     font-weight: 400;
-    font-size: 1.2rem;
+    font-size: clamp(0.8rem, 1vw + 0.5rem, 1.2rem);
+    line-height: 1.4rem;
     a {
       font-weight: 400;
     }
     a:hover {
       text-decoration: underline;
+    }
+    span {
+      font-weight: 700;
     }
   }
 }
@@ -104,7 +108,7 @@ header {
   /* max-width: 1440px; */
   margin-bottom: 2em;
   & > :last-child {
-    margin-top: 2em;
+    margin: 2em 0em;
   }
 }
 
@@ -122,7 +126,7 @@ header {
   top: 2em;
   display: flex;
   height: max-content;
-  max-width: 20em;
+  width: 17em;
   flex-direction: column;
   align-items: center;
   & > :first-child {
@@ -320,6 +324,18 @@ header {
     margin: 0em 2em;
   }
 }
+@media (max-width: 900px) {
+  #main-contents {
+    gap: 1em;
+  }
+  #sidebar {
+    width: 30%;
+    ul {
+      font-size: 0.8rem;
+    }
+  }
+}
+
 @media (max-width: 800px) {
   #main-contents {
     flex-direction: column;

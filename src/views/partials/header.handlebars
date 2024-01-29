@@ -3,12 +3,14 @@
     <span id="header-post-container" class="header-contents-container">
       <span id="location-path">
         <a href="/">Home</a>
-        >
+        ⋅
         <a href={{interpolateURLString data.category.name null}}>
           {{interpolateTitle data.category.name}}
         </a>
-        >
-        {{interpolateTitle data.title}}
+        ⋅
+        <span>
+          {{interpolateTitle data.title}}
+        </span>
       </span>
       <h1>
         {{interpolateTitle data.title}}
