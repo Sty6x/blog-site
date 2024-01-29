@@ -17,7 +17,9 @@
       </h1>
       <span id="date-time">
         {{data.dateAdded}}
-        ⋅ 8 min read
+        ⋅
+        {{getReadTime data.content}}
+        min read
       </span>
     </span>
   {{else}}

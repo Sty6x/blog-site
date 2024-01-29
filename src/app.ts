@@ -30,9 +30,23 @@ startMongooseServer(uri).catch((err) => console.log(err));
 const handlebars = create({
   runtimeOptions: { allowProtoPropertiesByDefault: true },
   helpers: {
-    setToString: (data: string) => {
-      const stringData = format(data, "PP");
-      return stringData.toString();
+    getReadTime: (blogContent: string): number => {
+      const parseMarkdown = markdown.render(blogContent);
+      const { document } = new JSDOM(parseMarkdown).window;
+      const paragraphs = Array.from(document.querySelectorAll("p"));
+      const averageWPM = 200;
+      let unifiedText: string = "";
+      let totalTextCount: number = 0;
+      paragraphs.forEach((p: any) => {
+        unifiedText += ` ${p.textContent}`;
+      });
+      for (let i = 0; i < unifiedText.length; i++) {
+        if (unifiedText[i] === " ") {
+          totalTextCount++;
+        }
+      }
+
+      return Math.ceil(totalTextCount++ / averageWPM);
     },
     isArrayEmpty: (array: any) => {
       return array.length == 0 ? true : false;
