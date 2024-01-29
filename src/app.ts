@@ -16,6 +16,7 @@ const cors = require("cors");
 const app: Application = express();
 const port = 3000;
 const posts = require("./routes/post");
+const searchQueryMiddlewares = require("./middleware/searchQuery");
 const category = require("./routes/category");
 const apiIndex = require("./api/index");
 const uri = `mongodb+srv://franzdiaz460:blog-site460@cluster0.jcvqazt.mongodb.net/blog-data?retryWrites=true&w=majority`;
@@ -124,25 +125,7 @@ app.get(
 );
 
 // sanitize this route handler middleware
-app.get(
-  "/search",
-  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    console.log(interpolateString(req.query.search as string));
-    const queryPosts = await Post.find({
-      title: interpolateString(req.query.search as string),
-    }).exec();
-    if (!queryPosts) {
-      const err = new CustomError("Unable to fetch posts", 404);
-      throw err;
-    }
-    // fetch isFeatured and recente blog posts
-    res.render("index", {
-      isPost: false,
-      pageTitle: `Results for ${req.query.search}`,
-      data: { posts: Array.isArray(queryPosts) ? queryPosts : [queryPosts] },
-    });
-  })
-);
+app.get("/search", searchQueryMiddlewares);
 app.use("/", category);
 app.use("/:category", posts);
 
