@@ -7,9 +7,11 @@
 <div id="nav-links-container" class="sidebar-contents-container">
   <ul>
     <li class="selected-link"><a href="/">Featured</a></li>
-    <li><a href="/tutorials">Tutorials</a></li>
-    <li><a href="/computer-systems">Computer Systems</a></li>
-    <li><a href="/web-development">Web Development</a></li>
-    <li><a href="/books">Books</a></li>
+    {{#each data.categories}}
+      <li><a href={{interpolateURLString this.name null}}>{{interpolateTitle
+            this.name
+          }}</a>
+      </li>
+    {{/each}}
   </ul>
 </div>

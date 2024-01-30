@@ -6,6 +6,7 @@ import path from "path";
 import { Post } from "./model/postModel";
 import asyncHandler from "./utils/asyncHandler";
 import CustomError from "./utils/CustomError";
+import { Category } from "./model/categoryModel";
 const cors = require("cors");
 const app: Application = express();
 const port = 3000;
@@ -41,19 +42,29 @@ app.listen(port, () => {
 app.use("/api", apiIndex);
 
 // Page Route Resources
+// dynamically update categories
 app.get(
   "/",
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const queryFeaturedPosts = await Post.find({ isFeatured: true }).exec();
+    const queryCategories = await Category.find({
+      name: { $ne: "uncategorized" },
+    }).exec();
+
+    if (!queryCategories) {
+      const err = new CustomError("Unable to fetch categories", 404);
+      throw err;
+    }
     if (!queryFeaturedPosts) {
       const err = new CustomError("Unable to fetch posts", 404);
       throw err;
     }
+    console.log(queryCategories);
     // fetch isFeatured and recent blog posts
     res.render("index", {
       isPost: false,
       pageTitle: "FEATURED POSTS",
-      data: { posts: queryFeaturedPosts },
+      data: { posts: queryFeaturedPosts, categories: queryCategories },
     });
   })
 );

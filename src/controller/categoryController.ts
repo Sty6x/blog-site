@@ -15,6 +15,15 @@ const getCategory = asyncHandler(
     })
       .populate("posts")
       .exec();
+
+    const queryCategories = await Category.find({
+      name: { $ne: "uncategorized" },
+    }).exec();
+
+    if (!queryCategories) {
+      const err = new CustomError("Unable to fetch categories", 404);
+      throw err;
+    }
     if (!queryCategory)
       return res.json({ message: "Category does not exist", statusCode: 404 });
     res.render("category", {
@@ -26,6 +35,7 @@ const getCategory = asyncHandler(
         name: queryCategory?.name,
         _id: queryCategory?._id,
         posts: queryCategory?.posts,
+        categories: queryCategories,
       },
     });
   }
