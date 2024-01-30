@@ -5,8 +5,7 @@ import { Category } from "../model/categoryModel";
 import asyncHandler from "../utils/asyncHandler";
 import CustomError from "../utils/CustomError";
 import { format } from "date-fns";
-// middlewares to query the data provided by the parameter
-// after querying the requested data got to the next middleware next()
+
 const getPost = asyncHandler(async (req: Request, res: Response) => {
   const query = await Post.findOne({ title: req.params.postId }).exec();
   if (!query) {
@@ -60,6 +59,7 @@ const postAPIPost = [
     }).exec();
     const userData = {
       ...req.body,
+      dateAdded: new Date(),
       category: {
         name: queryCategory?.name,
         categoryId: queryCategory?.id,
