@@ -59,7 +59,6 @@ app.get(
       const err = new CustomError("Unable to fetch posts", 404);
       throw err;
     }
-    console.log(queryCategories);
     // fetch isFeatured and recent blog posts
     res.render("index", {
       isPost: false,

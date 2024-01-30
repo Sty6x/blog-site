@@ -32,7 +32,6 @@ passport.use(
     jwt_payload: any,
     done: (arg0: any, arg1: any) => any
   ) {
-    console.log("ha");
     const queryUser = User.findOne({
       email: jwt_payload.email,
       password: jwt_payload.password,
@@ -52,7 +51,6 @@ router.post(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { email, password } = req.body;
       const queryUser = await User.findOne({ email: req.body.email }).exec();
-      console.log(queryUser);
       if (!queryUser) {
         const err = new CustomError("User does not exist", 401);
         throw err;

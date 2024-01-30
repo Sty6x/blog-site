@@ -1,5 +1,4 @@
 import interpolateHashedLinkTitle from "./utils/interpolateHashedLinkTitle.js";
-console.log("Mod Call");
 
 function resetLinks(links) {
   return links.map((link) => {
@@ -14,9 +13,7 @@ function setLinkActive(links) {
   links.forEach((link) => {
     const anchorPath = link.children[0].href.substr(-location.pathname.length);
     const anchorHash = link.children[0].href.substr(-location.hash.length);
-    console.log(anchorPath);
     if (anchorPath === location.pathname) {
-      console.log(location.pathname);
       link.setAttribute("class", "selected-link");
       return;
     }
