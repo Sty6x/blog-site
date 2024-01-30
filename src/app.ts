@@ -8,6 +8,7 @@ import { Post } from "./model/postModel";
 import asyncHandler from "./utils/asyncHandler";
 import CustomError from "./utils/CustomError";
 import { Category } from "./model/categoryModel";
+const compression = require("compression");
 const cors = require("cors");
 const app: Application = express();
 const port = 3000;
@@ -16,7 +17,8 @@ const searchQueryMiddlewares = require("./middleware/searchQuery");
 const category = require("./routes/category");
 const apiIndex = require("./api/index");
 const handlebarsHelpers = require("./utils/handlebarsHelpers");
-const uri = `mongodb+srv://franzdiaz460:${process.env.MONGODB_PASS}@cluster0.jcvqazt.mongodb.net/blog-data?retryWrites=true&w=majority`;
+const RateLimit = require("express-rate-limit");
+const uri: string = process.env.MONGODB_URI as string;
 
 mongoose.set("strictQuery", false);
 async function startMongooseServer(uri: string): Promise<void> {
@@ -29,6 +31,14 @@ const handlebars = create({
   runtimeOptions: { allowProtoPropertiesByDefault: true },
   helpers: handlebarsHelpers,
 });
+
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 20,
+});
+
+app.use(limiter);
+app.use(compression());
 app.use(express.static(path.join(__dirname, "public")));
 app.engine("handlebars", handlebars.engine);
 app.set("view engine", "handlebars");
