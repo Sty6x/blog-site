@@ -14,7 +14,8 @@ I might populate this project with meaningful contents to share with other peopl
 ### Preview to the site
 ![Screenshot from 2024-01-30 05-24-02](https://github.com/Sty6x/blog-site/assets/53662191/ee798d20-540f-42ae-99cc-b61404163467)
 ![Screenshot from 2024-01-30 05-28-31](https://github.com/Sty6x/blog-site/assets/53662191/f3cdf403-5563-42db-becc-c4de84f109f4)
-![Screenshot from 2024-01-30 05-29-59](https://github.com/Sty6x/blog-site/assets/53662191/78df0293-7f58-4987-938a-e19c33a94a34)
+![Screenshot from 2024-01-30 05-39-31](https://github.com/Sty6x/blog-site/assets/53662191/2dc56d4e-7cf7-4d29-a87a-e7e6f92fd3c6)
+
 
 ## How to run
 
