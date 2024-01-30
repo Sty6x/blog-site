@@ -1,5 +1,6 @@
 import express, { NextFunction } from "express";
-import { ExpressHandlebars, engine, create } from "express-handlebars";
+import "dotenv/config";
+import { create } from "express-handlebars";
 import { Application, Request, Response } from "express-serve-static-core";
 import mongoose from "mongoose";
 import path from "path";
@@ -15,7 +16,7 @@ const searchQueryMiddlewares = require("./middleware/searchQuery");
 const category = require("./routes/category");
 const apiIndex = require("./api/index");
 const handlebarsHelpers = require("./utils/handlebarsHelpers");
-const uri = `mongodb+srv://franzdiaz460:blog-site460@cluster0.jcvqazt.mongodb.net/blog-data?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://franzdiaz460:${process.env.MONGODB_PASS}@cluster0.jcvqazt.mongodb.net/blog-data?retryWrites=true&w=majority`;
 
 mongoose.set("strictQuery", false);
 async function startMongooseServer(uri: string): Promise<void> {
@@ -42,7 +43,6 @@ app.listen(port, () => {
 app.use("/api", apiIndex);
 
 // Page Route Resources
-// dynamically update categories
 app.get(
   "/",
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

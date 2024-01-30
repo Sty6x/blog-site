@@ -23,7 +23,7 @@ const ExtractJwt = require("passport-jwt").ExtractJwt;
 const router = express.Router();
 
 const opt = {
-  secretOrKey: "secret",
+  secretOrKey: process.env.SECRET_KEY,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
 
@@ -59,7 +59,7 @@ router.post(
       }
       const newToken = jwt.sign(
         { email: queryUser?.email, password: queryUser?.password },
-        "secret"
+        process.env.SECRET_KEY
       );
 
       res.json({ message: "logged in", token: newToken });
