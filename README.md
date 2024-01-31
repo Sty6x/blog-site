@@ -1,5 +1,5 @@
 # blog-site
-Creating a more backend focused project serving dynamic html and creating APIs for a content editor using CRUD Operations.
+Creating a more backend focused project by responding to user request and creating APIs for a content editor using CRUD Operations.
 ## What is it 
 A Blog site where I can share my thoughts and opinions about Computer Systems, Web Development also creating tutorials and reviews on my favorite books. but for now I will populate the blog site from my markdown application [Vimnotes](https://github.com/Sty6x/markdown-app) just to see how it looks.
 ## Reason
