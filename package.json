@@ -8,7 +8,7 @@
     "dev": "nodemon"
   },
   "engines": {
-    "node": ">=20.10.0"
+    "node": ">=16.x"
   },
   "keywords": [],
   "author": "",
