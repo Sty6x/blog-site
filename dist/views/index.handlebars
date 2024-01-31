@@ -1,0 +1,20 @@
+<main id="main-contents">
+    {{> sidebarcontainer}}
+    <section class="post-section">
+        <p id="page-query-title">{{pageTitle}}</p>
+        <ul id="featured-posts-container" class="blog-posts">
+            {{#each data.posts}}
+               <li class="blog-post-item">
+                <span class="blog-post-item-title">
+                  <a href={{interpolateURLString this.category.name this.title}}>{{interpolateTitle this.title}}</a>
+                  <span>{{this.category.name}}</span>
+                </span>
+
+                <p>{{extractElement this.content}}</p>
+                {{!-- <p>{{this.content}}</p> --}}
+                <span class="blog-post-item-link"><a href={{interpolateURLString this.category.name this.title}}>Read more</a></span>
+               </li>
+            {{/each}}
+        </ul>
+    </section>
+</main>

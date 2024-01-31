@@ -17,7 +17,6 @@ const searchQueryMiddlewares = require("./middleware/searchQuery");
 const category = require("./routes/category");
 const apiIndex = require("./api/index");
 const handlebarsHelpers = require("./utils/handlebarsHelpers");
-const RateLimit = require("express-rate-limit");
 const uri: string = process.env.MONGODB_URI as string;
 
 mongoose.set("strictQuery", false);
@@ -32,12 +31,6 @@ const handlebars = create({
   helpers: handlebarsHelpers,
 });
 
-const limiter = RateLimit({
-  windowMs: 1 * 60 * 1000,
-  max: 20,
-});
-
-app.use(limiter);
 app.use(compression());
 app.use(express.static(path.join(__dirname, "public")));
 app.engine("handlebars", handlebars.engine);

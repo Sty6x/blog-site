@@ -1,0 +1,33 @@
+<header>
+  {{#if isPost}}
+    <span id="header-post-container" class="header-contents-container">
+      <span id="location-path">
+        <a href="/">Home</a>
+        ⋅
+        <a href={{interpolateURLString data.category.name null}}>
+          {{interpolateTitle data.category.name}}
+        </a>
+        ⋅
+        <span>
+          {{interpolateTitle data.title}}
+        </span>
+      </span>
+      <h1>
+        {{interpolateTitle data.title}}
+      </h1>
+      <span id="date-time">
+        {{data.dateAdded}}
+        ⋅
+        {{getReadTime data.content}}
+        min read
+      </span>
+    </span>
+  {{else}}
+    <span id="header-regular-container" class="header-contents-container">
+      <h1>
+        A place where I talk about programming, computer systems, tutorials for
+        various things in programming and reviews on my favorite books.
+      </h1>
+    </span>
+  {{/if}}
+</header>

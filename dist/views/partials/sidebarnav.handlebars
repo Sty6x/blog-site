@@ -1,0 +1,17 @@
+<form method="get" action="/search">
+  <span id="search-input-container">
+    <label for="title"></label>
+    <input type="search" placeholder="Search" name="searchQuery" id="title" />
+  </span>
+</form>
+<div id="nav-links-container" class="sidebar-contents-container">
+  <ul>
+    <li class="selected-link"><a href="/">Featured</a></li>
+    {{#each data.categories}}
+      <li><a href={{interpolateURLString this.name null}}>{{interpolateTitle
+            this.name
+          }}</a>
+      </li>
+    {{/each}}
+  </ul>
+</div>

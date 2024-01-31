@@ -1,0 +1,38 @@
+:root {
+  /* h1 */
+  --h1-size: 2rem;
+  --h1-weight: 600;
+  /* h2 */
+  --h2-size: 1.5rem;
+  --h2-weight: 600;
+  /* h3 */
+  --h3-size: 1rem;
+  --h3-weight: 600;
+
+  /* h4 */
+  --h4-size: 0.8rem;
+  --h4-weight: 600;
+
+  /* h5 */
+  --h5-size: 0.5rem;
+  --h5-weight: 600;
+}
+.markdown-body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: "Be Vietnam Pro", sans-serif;
+
+  hr {
+    height: 0.15em;
+  }
+  h2 {
+    border-bottom: none;
+  }
+  h1 {
+    border-bottom: 1px solid var(--border-colors);
+    /* line-height: 1.5rem; */
+  }
+  pre {
+    background-color: var(--border-colors);
+  }
+}
